@@ -1,0 +1,1 @@
+export const TS_EXT = 'vscode.typescript-language-features';
