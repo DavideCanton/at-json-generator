@@ -1,8 +1,7 @@
+import * as ts from 'typescript';
 import * as vscode from 'vscode';
 import { DecoratorGenerator } from './decorator-generator';
 import { SourceCache } from "./source-cache";
-import * as ts from 'typescript';
-import { pipeline } from 'stream';
 
 export class Controller
 {
@@ -12,10 +11,16 @@ export class Controller
     onDecorateProperty()
     {
         const editor = vscode.window.activeTextEditor;
-        if (!editor) return;
+        if (!editor)
+        {
+            return;
+        }
 
         const file = this.getAndCacheFile();
-        if (!file) return;
+        if (!file)
+        {
+            return;
+        }
 
         const offset = editor.document.offsetAt(editor.selection.active);
 
@@ -25,10 +30,14 @@ export class Controller
             if (node.kind === ts.SyntaxKind.PropertyDeclaration)
             {
                 if (node.pos <= offset && offset <= node.end)
+                {
                     foundProperty = node as ts.PropertyDeclaration;
+                }
             }
             if (!foundProperty)
+            {
                 node.forEachChild(getProperty);
+            }
         }
 
         getProperty(file);
@@ -39,7 +48,9 @@ export class Controller
             console.log(d);
         }
         else
+        {
             vscode.window.showInformationMessage("No property found at this position");
+        }
     }
 
     private getAndCacheFile(): ts.SourceFile | null
